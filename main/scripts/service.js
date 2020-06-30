@@ -12,9 +12,21 @@
        return this.res
     }
 
-    getResult = async () => {
+    getMovie = async (keyword) => {
+        this.json = await fetch(`https://api.themoviedb.org/3/search/company?query=${keyword}&api_key=${this.API}&page=1`)
+        this.res = await this.json.json()
+      
+       return this.res
+    }
+
+    getResult = async (text) => {
+        if (text == undefined) {
+            this.result = await this.getTv()
+        } else {
+            this.result = await this.getMovie(text)
+        }
         let title
-        this.result = await this.getTv()
+        
         this.arr = this.result.results.map((obj) => {
             if ("name" in obj) {
                  title = obj.name
@@ -31,6 +43,10 @@
         })
    
        return this.arr
+    }
+
+    getKeywordMovie = async () => {
+
     }
 
     getInfo = async (id,type) => {

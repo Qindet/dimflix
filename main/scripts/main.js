@@ -1,12 +1,17 @@
 import dbService from './service.js'
 
-async function main() {
+async function main() { //убрать main
 
 const elm = document.querySelector('.main__elements')
 
 
-async function render() {
-    let arr = await new dbService().getResult()
+async function render(text) {
+    let arr
+    if (text == undefined) {
+     arr = await new dbService().getResult()
+    } else {
+        arr = await new dbService().getResult(text)
+    }
     let complAr = arr.map(({rate,name,poster_path,id,media_type}) => {
        
         return `<div data-id=${id} data-type=${media_type} class="el">
@@ -24,6 +29,8 @@ let content = await render()
   for (let item of content) {
     elm.innerHTML += item
   }
+
+
 
 }
 
@@ -72,10 +79,33 @@ function fillModal({backdrop_path,title,genres,popularity,overview,origin_langua
   
 }
 
+function search() {
+    const searchBtn = document.querySelector('.main__button')
+    const input = document.querySelector('.main__input')
+    let text
+    input.addEventListener('change', (e) => {
+        text = e.target.value.trim()
+    })
+
+    searchBtn.addEventListener('click', async () => {
+        let content = await render()
+
+
+            for (let item of content) {
+                elm.innerHTML += item
+            }
+
+    })
+}
 
 
 
 
 
 
-main().then(modal())
+//render then->search 
+
+main().then(() => {
+    modal()
+    search()
+})
