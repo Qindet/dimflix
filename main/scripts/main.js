@@ -95,10 +95,14 @@ function search() {
     input.addEventListener('change', (e) => {
         text = e.target.value.trim()
     })
-
-    searchBtn.addEventListener('click', async () => {
-        render(text)
+    document.querySelector('.main__search').addEventListener('submit', (e) => {
+            e.preventDefault()
+            render(text)
     })
+
+    // searchBtn.addEventListener('click', async () => {
+    //     render(text)
+    // })
 }
 
 
