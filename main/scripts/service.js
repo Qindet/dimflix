@@ -13,26 +13,28 @@
     }
 
     getMovie = async (keyword) => {
-        this.json = await fetch(`https://api.themoviedb.org/3/search/company?query=${keyword}&api_key=${this.API}&page=1`)
+        this.json = await fetch(`https://api.themoviedb.org/3/search/multi?query=${keyword}&api_key=${this.API}&page=1`)
         this.res = await this.json.json()
       
        return this.res
     }
 
     getResult = async (text) => {
-        if (text == undefined) {
+        console.log("tut "+text)
+        if (text == undefined || text == "") {
             this.result = await this.getTv()
         } else {
             this.result = await this.getMovie(text)
         }
         let title
-        
+        console.log(this.result)
         this.arr = this.result.results.map((obj) => {
             if ("name" in obj) {
                  title = obj.name
             } else {
                 title = obj.title
             }
+            
             return {
                 rate: obj.vote_average,
                 name: title,
@@ -45,9 +47,7 @@
        return this.arr
     }
 
-    getKeywordMovie = async () => {
-
-    }
+   
 
     getInfo = async (id,type) => {
     

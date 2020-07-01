@@ -1,18 +1,26 @@
 import dbService from './service.js'
 
-async function main() { //убрать main
+//убрать main
 
-const elm = document.querySelector('.main__elements')
+
 
 
 async function render(text) {
+    const elm = document.querySelector('.main__elements')
+    elm.innerHTML = ""
     let arr
+   let complAr
     if (text == undefined) {
-     arr = await new dbService().getResult()
+        arr = await new dbService().getResult()
     } else {
         arr = await new dbService().getResult(text)
     }
-    let complAr = arr.map(({rate,name,poster_path,id,media_type}) => {
+    console.log(arr)
+    if (arr.length == 0) {
+        elm.innerHTML= "<div class='error-search'>К сожалению ничего не найдено :( <br> Повторите попытку.</div>"
+        return
+    } else {
+    complAr = arr.map(({rate,name,poster_path,id,media_type}) => {
        
         return `<div data-id=${id} data-type=${media_type} class="el">
                         <img class="el__img" src="${poster_path}" alt="">
@@ -20,19 +28,19 @@ async function render(text) {
                         <h4 class="el__title">${name}</h4>
                     </div>`
     })
-    return complAr
-}
+    }
 
-let content = await render()
-
-
-  for (let item of content) {
-    elm.innerHTML += item
-  }
-
-
+    for (let item of complAr) {
+        elm.innerHTML += item
+      }
 
 }
+
+  
+
+
+
+
 
 
 function modal() {
@@ -80,6 +88,7 @@ function fillModal({backdrop_path,title,genres,popularity,overview,origin_langua
 }
 
 function search() {
+
     const searchBtn = document.querySelector('.main__button')
     const input = document.querySelector('.main__input')
     let text
@@ -88,13 +97,7 @@ function search() {
     })
 
     searchBtn.addEventListener('click', async () => {
-        let content = await render()
-
-
-            for (let item of content) {
-                elm.innerHTML += item
-            }
-
+        render(text)
     })
 }
 
@@ -105,7 +108,7 @@ function search() {
 
 //render then->search 
 
-main().then(() => {
+render().then(() => {
     modal()
     search()
 })
