@@ -1,10 +1,5 @@
 import dbService from './service.js'
 
-//убрать main
-
-
-
-
 async function render(text) {
     const elm = document.querySelector('.main__elements')
     elm.innerHTML = ""
@@ -15,7 +10,6 @@ async function render(text) {
     } else {
         arr = await new dbService().getResult(text)
     }
-    console.log(arr)
     if (arr.length == 0) {
         elm.innerHTML= "<div class='error-search'>К сожалению ничего не найдено :( <br> Повторите попытку.</div>"
         return
@@ -24,46 +18,38 @@ async function render(text) {
        
         return `<div data-id=${id} data-type=${media_type} class="el">
                         <img class="el__img" src="${poster_path}" alt="">
-                        <span class="el__rate">${rate==0?'Нет оценки':rate}</span>
+                        <span class="el__rate">${rate==0?"Not rated":rate}</span>
                         <h4 class="el__title">${name}</h4>
                     </div>`
     })
     }
-
     for (let item of complAr) {
         elm.innerHTML += item
       }
-
 }
 
   
-
-
-
-
-
 
 function modal() {
     const elems = document.querySelector('.main__elements')
     const modal = document.querySelector('.modal')
     const modal_close = document.querySelector('.modal__close')
+    const main = document.querySelector('.main')
 
     elems.addEventListener('click', async (e) => {
         let target = e.target
-        
         if (target.closest('.el')){
             let item_id = target.closest('.el').dataset.id
             let item_type = target.closest('.el').dataset.type
-            console.log(item_id)
-            modal.style.display = 'block';
-          let info =await new dbService().getInfo(item_id, item_type)
+            modal.style.display = 'block'
+          let info = await new dbService().getInfo(item_id, item_type)
           fillModal(info)
-          console.log(info)
         }
     })
-    modal_close.addEventListener('click', (e) => {
+    modal_close.addEventListener('click', () => {
         modal.style.display= 'none'
     })
+  
 
 }
 
@@ -88,8 +74,6 @@ function fillModal({backdrop_path,title,genres,popularity,overview,origin_langua
 }
 
 function search() {
-
-    const searchBtn = document.querySelector('.main__button')
     const input = document.querySelector('.main__input')
     let text
     input.addEventListener('change', (e) => {
@@ -99,18 +83,10 @@ function search() {
             e.preventDefault()
             render(text)
     })
-
-    // searchBtn.addEventListener('click', async () => {
-    //     render(text)
-    // })
 }
 
 
 
-
-
-
-//render then->search 
 
 render().then(() => {
     modal()
